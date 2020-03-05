@@ -69,7 +69,7 @@ public class WeatherController extends AppCompatActivity {
         changeCityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent myIntent = new Intent();
+                Intent myIntent = new Intent(WeatherController.this,ChangeCityController.class);
                 startActivity(myIntent);
 
             }
@@ -83,12 +83,28 @@ public class WeatherController extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.d("Clima", "onResume() called");
-        getWeatherForCurrentLocation();
+
+        Intent myIntent = getIntent();
+        String city  = myIntent.getStringExtra("City");
+
+        if(city)
+        {
+            getWeatherForNewCity(city);
+        } else {
+            Log.d("Clima", "getWeatherForCurrentLocation() called");
+            getWeatherForCurrentLocation();
+        }
+
     }
 
 
     // TODO: Add getWeatherForNewCity(String city) here:
-
+    private void getWeatherForNewCity(String city){
+        RequestParams params = new RequestParams();
+        params.put("q",city);
+        params.put("appid",APP_ID);
+        letsDoSomeNetworking(params);
+    }
 
     // TODO: Add getWeatherForCurrentLocation() here:
     private void getWeatherForCurrentLocation() {
@@ -197,7 +213,12 @@ public class WeatherController extends AppCompatActivity {
 
 
     // TODO: Add onPause() here:
+    @Override
+    protected void onPause() {
+        super.onPause();
 
-
-
+        if(mLocationManager != null) {
+            mLocationManager.removeUpdates(mLocationListener);
+        }
+    }
 }
