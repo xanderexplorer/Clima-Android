@@ -87,7 +87,7 @@ public class WeatherController extends AppCompatActivity {
         Intent myIntent = getIntent();
         String city  = myIntent.getStringExtra("City");
 
-        if(city)
+        if(city != null)
         {
             getWeatherForNewCity(city);
         } else {
@@ -179,10 +179,11 @@ public class WeatherController extends AppCompatActivity {
     private void letsDoSomeNetworking(RequestParams params)
     {
         AsyncHttpClient client = new AsyncHttpClient();
+        client.setTimeout(7000);
 
         client.get(WEATHER_URL,params,new JsonHttpResponseHandler(){
             @Override
-            public void onSuccess(int statusCode, Header[], JSONObject response) {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Log.d("Clima","Success! JSON: "+ response.toString());
 
                 WeatherDataModel weatherData = WeatherDataModel.fromJson(response);
@@ -190,10 +191,10 @@ public class WeatherController extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(int statusCode, Header[],Throwable e, JSONObject response) {
+            public void onFailure(int statusCode, Header[] headers,Throwable e, JSONObject response) {
                 Log.e("Clima", "Fail" + e.toString());
                 Log.d("Clima", "status code "+ statusCode);
-                Toast.makeText(this,"Request Failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(WeatherController.this,"Request Failed", Toast.LENGTH_SHORT).show();
             }
         });
     }

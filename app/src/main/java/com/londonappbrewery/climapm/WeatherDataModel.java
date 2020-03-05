@@ -22,7 +22,7 @@ public class WeatherDataModel {
             weatherData.mIconName = updateWeatherIcon(weatherData.mCondition);
 
             double tempResult = jsonObject.getJSONObject("main").getDouble("temp");
-            int roundedValue = (int) rint(tempResult);
+            int roundedValue = (int) Math.rint(tempResult);
             weatherData.mTemperature = Integer.toString(roundedValue);
 
             return weatherData;
