@@ -24,6 +24,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
+import java.text.DecimalFormat;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -39,6 +40,7 @@ public class WeatherController extends AppCompatActivity {
     final long MIN_TIME = 5000;
     // Distance between location updates (1000m or 1km)
     final float MIN_DISTANCE = 1000;
+    private static DecimalFormat df2 = new DecimalFormat("#.##");
 
     // TODO: Set LOCATION_PROVIDER here:
     String LOCATION_PROVIDER = LocationManager.GPS_PROVIDER;
@@ -59,10 +61,10 @@ public class WeatherController extends AppCompatActivity {
         setContentView(R.layout.weather_controller_layout);
 
         // Linking the elements in the layout to Java code
-        mCityLabel = (TextView) findViewById(R.id.locationTV);
-        mWeatherImage = (ImageView) findViewById(R.id.weatherSymbolIV);
-        mTemperatureLabel = (TextView) findViewById(R.id.tempTV);
-        ImageButton changeCityButton = (ImageButton) findViewById(R.id.changeCityButton);
+        mCityLabel = findViewById(R.id.locationTV);
+        mWeatherImage = findViewById(R.id.weatherSymbolIV);
+        mTemperatureLabel = findViewById(R.id.tempTV);
+        ImageButton changeCityButton = findViewById(R.id.changeCityButton);
 
 
         // TODO: Add an OnClickListener to the changeCityButton here:
@@ -106,6 +108,8 @@ public class WeatherController extends AppCompatActivity {
         letsDoSomeNetworking(params);
     }
 
+
+
     // TODO: Add getWeatherForCurrentLocation() here:
     private void getWeatherForCurrentLocation() {
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -115,13 +119,14 @@ public class WeatherController extends AppCompatActivity {
             public void onLocationChanged(Location location) {
                 Log.d("Clima", "onLocationChanged() callback received");
 
-                String longitude = String.valueOf(location.getLongitude());
-                String latitude = String.valueOf(location.getLatitude());
+                String longitude = String.valueOf((location.getLongitude()));
+                String latitude = String.valueOf((location.getLatitude()));
+
                 Log.d("Clima","Longitude: "+longitude+" and Latitude: "+latitude);
 
                 RequestParams params = new RequestParams();
-                params.put("Lat",latitude);
-                params.put("Lon",longitude);
+                params.put("lat",latitude);
+                params.put("lon",longitude);
                 params.put("appid",APP_ID);
                 letsDoSomeNetworking(params);
             }
@@ -179,7 +184,7 @@ public class WeatherController extends AppCompatActivity {
     private void letsDoSomeNetworking(RequestParams params)
     {
         AsyncHttpClient client = new AsyncHttpClient();
-        client.setTimeout(7000);
+//        client.setTimeout(7000);
 
         client.get(WEATHER_URL,params,new JsonHttpResponseHandler(){
             @Override

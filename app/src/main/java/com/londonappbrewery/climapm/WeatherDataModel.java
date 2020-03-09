@@ -1,9 +1,11 @@
 package com.londonappbrewery.climapm;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class WeatherDataModel {
+class WeatherDataModel {
 
     // TODO: Declare the member variables here
     private  String mTemperature;
@@ -13,7 +15,7 @@ public class WeatherDataModel {
 
 
     // TODO: Create a WeatherDataModel from a JSON:
-    public static WeatherDataModel fromJson(JSONObject jsonObject){
+    static WeatherDataModel fromJson(JSONObject jsonObject){
         try {
             WeatherDataModel weatherData = new WeatherDataModel();
 
@@ -22,7 +24,8 @@ public class WeatherDataModel {
             weatherData.mIconName = updateWeatherIcon(weatherData.mCondition);
 
             double tempResult = jsonObject.getJSONObject("main").getDouble("temp");
-            int roundedValue = (int) Math.rint(tempResult);
+            int roundedValue = (int) Math.round(tempResult) - 273;
+            Log.d("Clima","temp value: " + roundedValue);
             weatherData.mTemperature = Integer.toString(roundedValue);
 
             return weatherData;
@@ -68,15 +71,15 @@ public class WeatherDataModel {
     // TODO: Create getter methods for temperature, city, and icon name:
 
 
-    public String getTemperature() {
+    String getTemperature() {
         return mTemperature + "°";
     }
 
-    public String getCity() {
+    String getCity() {
         return mCity;
     }
 
-    public String getIconName() {
+    String getIconName() {
         return mIconName;
     }
 }
